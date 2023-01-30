@@ -1,26 +1,25 @@
 #include <stdio.h>
-#include <rclcpp/rclcpp.hpp>
-#include <ctilog/log.hpp>
-#include <ctilog/loghelper.cpp.hpp>
-#include <std_msgs/msg/int32.hpp>
+#include "ctilog/log.hpp"
+#include "ctilog/loghelper.cpp.hpp"
+#include "ros/ros.h"
+#include <std_msgs/Int32.h>
 
 //KN:name in log
 constexpr char const* kN = "main";
 using namespace cti::log;
 
-void logLevelCallback(const std_msgs::msg::Int32::SharedPtr msg)
+void logLevelCallback(const std_msgs::Int32 &msg)
 {
-    LogLevel lev = (LogLevel)msg->data;
+    LogLevel lev = (LogLevel)msg.data;
     Logger::getLogger().setLogLevel(lev);
     Info("rev log level " << logLevelToString(lev));
 }
 
 int main(int argv, char *argc[])
 {
-  rclcpp::init(argv, argc);
+  ros::init(argv, argc, "cti_log_example");
   
-  //ros::NodeHandle n;
-  auto node = rclcpp::Node::make_shared("cti_log_example");
+  ros::NodeHandle n;
 
   //set the logger file name, defaut is "logger.log"
   Logger::setDefaultLogger("/home/lrd/test.log");
@@ -40,11 +39,9 @@ int main(int argv, char *argc[])
   //默认最小8*1024 默认最大256*1024*1024  256M
   Logger::getLogger().setMaxSize(1024*1024);
 
-  //ros::Subscriber sub = node->subscribe("/cti/log/level",2,logLevelCallback);
-  auto sub = node->
-  create_subscription<std_msgs::msg::Int32>("/cti/log/level",10,logLevelCallback);
+  ros::Subscriber sub = n.subscribe("/cti/log/level",2,logLevelCallback);
   
-  while(rclcpp::ok()){
+  while(ros::ok()){
     //logger
     Fatal("test-Fata!");
     Error("test-Erro!");
@@ -75,8 +72,8 @@ int main(int argv, char *argc[])
     Info("data1="<<data1<<" data2="<<data2<<" data3="<<data3);
   
     for(int i=0;i<10;i++){
-        //rclcpp::Duration(0.5).sleep_for();
-        rclcpp::spin(node);
+        ros::Duration(0.5).sleep();
+        ros::spinOnce();
     }
   }
   return 0;

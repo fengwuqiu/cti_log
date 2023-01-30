@@ -18,8 +18,8 @@
 #include "boost/shared_ptr.hpp"
 #include "boost/make_shared.hpp"
 #include "boost/thread/shared_mutex.hpp"
-#include "anytype.hpp"
-#include "errno.hpp"
+#include "ctilog/log/anytype.hpp"
+#include "ctilog/log/errno.hpp"
 #include <iostream>
 
 namespace cti {

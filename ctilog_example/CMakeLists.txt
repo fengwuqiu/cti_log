@@ -1,44 +1,35 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 2.8.3)
 project(ctilog_example)
 
-# Default to C99
-if(NOT CMAKE_C_STANDARD)
-  set(CMAKE_C_STANDARD 99)
-endif()
+add_compile_options(-std=c++11)
+set (CMAKE_VERBOSE_MAKEFILE ON)
 
-# Default to C++14
-if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 14)
-endif()
-
-if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic -fdiagnostics-color=always)
-endif()
-
-# find dependencies
-find_package(ament_cmake REQUIRED)
-find_package(rclcpp REQUIRED)
-find_package(std_msgs REQUIRED)
-find_package(ctilog REQUIRED)
-
-add_executable(${PROJECT_NAME}_node
-  src/example.cpp
- )
-
-target_include_directories(${PROJECT_NAME}_node PUBLIC
-  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-  "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>"
-  "$<INSTALL_INTERFACE:include>"
+find_package(catkin REQUIRED COMPONENTS
+  ctilog
+  roscpp
 )
 
-ament_target_dependencies(${PROJECT_NAME}_node 
-  "rclcpp"
-  "ctilog"
-  )
+catkin_package(
+#  INCLUDE_DIRS include
+#  LIBRARIES ctilog_example
+#  CATKIN_DEPENDS ctilog roscpp
+#  DEPENDS system_lib
+)
 
+include_directories(
+# include
+  ${catkin_INCLUDE_DIRS}
+)
+
+add_executable(${PROJECT_NAME}_node src/example.cpp)
+
+target_link_libraries(${PROJECT_NAME}_node
+  ${catkin_LIBRARIES}
+)
 
 install(TARGETS ${PROJECT_NAME}_node
-   DESTINATION lib/${PROJECT_NAME}
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
-ament_package()

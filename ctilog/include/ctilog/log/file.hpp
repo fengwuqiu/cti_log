@@ -30,9 +30,9 @@
 #include "boost/optional.hpp"
 #include "boost/function.hpp"
 #include "boost/thread/shared_mutex.hpp"
-#include "any.hpp"
-#include "scopedrwlock.hpp"
-#include "flags.hpp"
+#include "ctilog/log/any.hpp"
+#include "ctilog/log/scopedrwlock.hpp"
+#include "ctilog/log/flags.hpp"
 namespace cti {
 namespace log
 {

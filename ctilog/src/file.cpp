@@ -12,6 +12,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * ======================================================================== */
+#include "ctilog/log/file.hpp"
 #include <stdio.h>
 #include <unistd.h>
 #include <ulimit.h>
@@ -23,8 +24,6 @@
 #endif
 #include "ctilog/log/errno.hpp"
 #include "ctilog/log/exception.hpp"
-#include "ctilog/log/file.hpp"
-
 namespace cti {
 namespace log
 {

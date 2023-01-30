@@ -10,6 +10,7 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. */
+#include "ctilog/log.hpp"
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
@@ -17,8 +18,6 @@
 #include <sstream>
 #include <atomic>
 #include "ctilog/log/file.hpp"
-#include "ctilog/log.hpp"
-
 namespace cti {
 namespace log
 {

@@ -12,7 +12,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 #pragma once
 #include "boost/thread/shared_mutex.hpp"
-#include "rwlock.hpp"
+#include "ctilog/log/rwlock.hpp"
 namespace cti {
 namespace log
 {

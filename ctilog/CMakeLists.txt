@@ -1,62 +1,54 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 2.8.0)  
+
 project(ctilog)
-SET(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -O0 -Wall -g -ggdb")
-SET(CMAKE_CXX_FLAGS_RELEASE "$ENV{CXXFLAGS} -O3 -Wall")
 
-# Default to C99
-if(NOT CMAKE_C_STANDARD)
-  set(CMAKE_C_STANDARD 99)
+find_package(catkin REQUIRED)
+find_package(Boost REQUIRED)
+
+#Check C++11 or C++0x support
+include(CheckCXXCompilerFlag)
+CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
+CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
+if(COMPILER_SUPPORTS_CXX11)
+  add_compile_options(-std=c++11)
+  message(STATUS "using flag -std=c++11.")
+elseif(COMPILER_SUPPORTS_CXX0X)
+  add_compile_options(-std=c++0x)
+  message(STATUS "using flag -std=c++0x.")
+else()
+  message(FATAL_ERROR
+    "the compiler ${CMAKE_CXX_COMPILER} has no C++11 support. "
+    "please use a different C++ compiler.")
 endif()
 
-# Default to C++17
-if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 17)
-endif()
+file(GLOB_RECURSE ALL_LIBRARY_SRCS "src/[a-zA-Z]*.c" "src/[a-zA-Z]*.cc" "src/[a-zA-Z]*.cpp")
 
-if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic -fdiagnostics-color=always)
-endif()
+catkin_package(
+   INCLUDE_DIRS include
+   LIBRARIES ${PROJECT_NAME}
+   CATKIN_DEPENDS ${catkin_LIBRARIES}
+   DEPENDS ${Boost_LIBRARIES}
+)
 
-# find dependencies
-find_package(ament_cmake REQUIRED)
-find_package(rclcpp REQUIRED)
-find_package(Boost COMPONENTS thread REQUIRED)
+
 include_directories(
   include
+  ${catkin_INCLUDE_DIRS} 
   ${Boost_INCLUDE_DIRS}
 )
 
+add_library(${PROJECT_NAME} SHARED ${ALL_LIBRARY_SRCS})
 
-add_library(${PROJECT_NAME} SHARED
-  src/any.cpp
-  src/exception.cpp
-  src/file.cpp
-  src/log.cpp
-  src/rwlock.cpp
-  )
+target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES} ${catkin_LIBRARIES})
 
-target_include_directories(${PROJECT_NAME} PUBLIC
-    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-    "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>"
-    "$<INSTALL_INTERFACE:include>"
-  )
-
-target_link_libraries(${PROJECT_NAME} PRIVATE Boost::thread)
-
-install(
-    TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib
-    RUNTIME DESTINATION bin
-  )
-ament_export_include_directories(include)
-ament_export_libraries(${PROJECT_NAME})
-ament_export_targets(${PROJECT_NAME})
-ament_export_dependencies(Boost)
-
-ament_package()
-
-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/
-  DESTINATION include
+install(TARGETS ${PROJECT_NAME}
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
+install(DIRECTORY include/
+  DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}
+  FILES_MATCHING PATTERN "*.hpp"
+  PATTERN ".svn" EXCLUDE
+)

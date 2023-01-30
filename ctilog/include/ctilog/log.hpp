@@ -19,9 +19,9 @@
 #include <time.h>
 #include <set>
 #include <sstream>
-#include "loglevel.hpp"
-#include "log/flags.hpp"
-#include "log/scopedrwlock.hpp"
+#include "ctilog/loglevel.hpp"
+#include "ctilog/log/flags.hpp"
+#include "ctilog/log/scopedrwlock.hpp"
 
 #if defined __arm__ || defined __aarch64__
 #include <linux/limits.h>
