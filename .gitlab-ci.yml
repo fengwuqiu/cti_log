@@ -6,13 +6,13 @@ stages:
   - build
   - test
   - make_deb
-image: 192.168.12.16:5000/sunny-ctirobot/cti_ade_base_foxy:latest
+image: 192.168.12.16:5000/sunny-ctirobot/cti_ade_base_humble:latest
 .tags: &tag
-  - foxy
+  - humble
 
 build:
   tags:
-    - foxy
+    - humble
   stage: build
   script:
     - MAKEFLAGS=-j12 colcon build --parallel-workers=24
@@ -27,7 +27,7 @@ build:
 # run tests using the binary built before
 test:
   tags:
-    - foxy
+    - humble
   stage: test
   # rules:
   #  - when: manual
@@ -42,7 +42,7 @@ test:
 
 make_deb:
   tags:
-    - foxy
+    - humble
   stage: make_deb
   script:
     - rosdep update

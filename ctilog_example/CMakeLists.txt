@@ -34,6 +34,7 @@ target_include_directories(${PROJECT_NAME}_node PUBLIC
 ament_target_dependencies(${PROJECT_NAME}_node 
   "rclcpp"
   "ctilog"
+  "std_msgs"
   )
 
 
